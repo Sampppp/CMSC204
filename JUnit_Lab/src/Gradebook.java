@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class GradeBook
+public class Gradebook
 {
    private double[] scores;
    private int scoresSize;
@@ -9,7 +9,7 @@ public class GradeBook
       Constructs a gradebook with no scores and a given capacity.
       @capacity the maximum number of scores in this gradebook
    */
-   public GradeBook(int capacity)
+   public Gradebook(int capacity)
    {
       scores = new double[capacity];
       scoresSize = 0;
@@ -78,4 +78,22 @@ public class GradeBook
       else
          return sum() - minimum();
    }
+   
+   //progrmammer made methods
+   public int getScoresSize() {
+	   return scoresSize;
+   }
+   
+   public String toString() {
+	   String temp = "";
+	   for(int i = 0; i < scores.length; i++) {
+		   temp += String.format("%s ", scores[i]);
+	   }
+	   return temp;
+   }
+   
+   
+   
+   
+   
 }
