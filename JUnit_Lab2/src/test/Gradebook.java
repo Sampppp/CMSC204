@@ -87,8 +87,8 @@ public class Gradebook
    
    public String toString() {
 	   String temp = "";
-	   for(int i = 0; i < scores.length; i++) {
-		   temp += String.format("%s ", scores[i]);
+	   for(int i = 0; i < scoresSize; i++) {
+		   temp += String.format("%.1f ", scores[i]);
 	   }
 	   return temp;
    }

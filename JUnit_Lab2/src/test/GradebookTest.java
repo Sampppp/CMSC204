@@ -31,23 +31,32 @@ class GradebookTest {
 
 	@Test
 	void testAddScore() {
-		assertTrue(test1.toString().equals("0.0 1.0 "));
+		assertTrue(test1.toString().equals("0.0 1.0 "));		
 		assertEquals(2, test1.getScoresSize());
+		
+		assertTrue(test2.toString().equals("0.0 1.0 "));		
+		assertEquals(2, test2.getScoresSize());
 	}
 
 	@Test
 	void testSum() {
 		assertEquals(1.0, test1.sum(), .001);
+		
+		assertEquals(1.0, test2.sum(), .001);
 	}
 
 	@Test
 	void testMinimum() {
 		assertEquals(0.0, test1.minimum(), .001);
+		
+		assertEquals(0.0, test2.minimum(), .001);
 	}
 
 	@Test
 	void testFinalScore() {
 		assertEquals(1.0, test1.finalScore(), .001);
+		
+		assertEquals(1.0, test2.finalScore(), .001);
 	}
 
 }
