@@ -10,18 +10,32 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
 /**
- * STUDENT tests for the methods of PasswordChecker
- * @author 
+ * STUDENT tests for the methods of PasswordChecker.
  *
+ * @author 
  */
 public class PasswordCheckerTest_STUDENT {
+	
+	/** The passwords. */
 	ArrayList<String> passwords = new ArrayList<>();
+	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		passwords = new ArrayList<>();
 	}
 
+	/**
+	 * Tear down.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 		passwords = null;
@@ -49,7 +63,7 @@ public class PasswordCheckerTest_STUDENT {
 	
 	/**
 	 * Test if the password has at least one uppercase alpha character
-	 * This test should throw a NoUpperAlphaException for second case
+	 * This test should throw a NoUpperAlphaException for second case.
 	 */
 	@Test
 	public void testIsValidPasswordNoUpperAlpha()
@@ -69,7 +83,7 @@ public class PasswordCheckerTest_STUDENT {
 	
 	/**
 	 * Test if the password has at least one lowercase alpha character
-	 * This test should throw a NoLowerAlphaException for second case
+	 * This test should throw a NoLowerAlphaException for second case.
 	 */
 	@Test
 	public void testIsValidPasswordNoLowerAlpha()
@@ -86,9 +100,10 @@ public class PasswordCheckerTest_STUDENT {
 			assertTrue("Threw some other exception besides NoLowerAlphaException. Threw: " + e.getMessage(),false);
 		}
 	}
+	
 	/**
 	 * Test if the password has more than 2 of the same character in sequence
-	 * This test should throw a InvalidSequenceException for second case
+	 * This test should throw a InvalidSequenceException for second case.
 	 */
 	@Test
 	public void testIsWeakPassword()
@@ -108,7 +123,7 @@ public class PasswordCheckerTest_STUDENT {
 	
 	/**
 	 * Test if the password has more than 2 of the same character in sequence
-	 * This test should throw a InvalidSequenceException for second case
+	 * This test should throw a InvalidSequenceException for second case.
 	 */
 	@Test
 	public void testIsValidPasswordInvalidSequence()
@@ -128,7 +143,7 @@ public class PasswordCheckerTest_STUDENT {
 	
 	/**
 	 * Test if the password has at least one digit
-	 * One test should throw a NoDigitException
+	 * One test should throw a NoDigitException.
 	 */
 	@Test
 	public void testIsValidPasswordNoDigit()
@@ -148,7 +163,7 @@ public class PasswordCheckerTest_STUDENT {
 	
 	/**
 	 * Test correct passwords
-	 * This test should not throw an exception
+	 * This test should not throw an exception.
 	 */
 	@Test
 	public void testIsValidPasswordSuccessful()
@@ -165,11 +180,11 @@ public class PasswordCheckerTest_STUDENT {
 	
 	/**
 	 * Test the invalidPasswords method
-	 * Check the results of the ArrayList of Strings returned by the validPasswords method
+	 * Check the results of the ArrayList of Strings returned by the validPasswords method.
 	 */
 	@Test
 	public void testInvalidPasswords() {
-		passwords.add("ABCdef123");
+		passwords.add("ABCdef123!");
 		passwords.add("a");
 		passwords.add("abcd1234!@");
 		passwords.add("ABCD1234!@");
