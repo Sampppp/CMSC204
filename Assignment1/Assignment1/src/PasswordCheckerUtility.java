@@ -1,9 +1,16 @@
+import java.lang.WeakPairMap.Pair.Weak;
+
+import javax.lang.model.util.ElementScanner14;
+
 import jave.util.*;
 public class PasswordCheckerUtility {
-    private String password;
-    private String passwordConfirm;
-    private ArrayList<String> passwords = new ArrayList<>();
+    private static ArrayList<String> passwords = new ArrayList<>();
     
+    private static Matcher match;
+    private static Pattern upper = Pattern.compile("[A-Z]");
+    private static Pattern lower = Pattern.compile("[a-z]");
+    private static Pattern digit = Pattern.compile("[0-9]");
+    private static Pattern special = Pattern.compile("[!-/:-@]");
     //finish proj idk
     
     public PasswordChecherUtility(){
@@ -16,58 +23,57 @@ public class PasswordCheckerUtility {
 
     public static boolean comparePassowrdsWithReturn(String password, String passwordConfirm){
         return (password.equals(passwordConfirm));
-
     }
 
     public static boolean isValidLength(String password)throws LengthException{
-        return (password.length() < 6);
+        if(password.length() < 6)
+            throw LengthException;
+        return true;
     }
 
     public static boolean hasUpperAlpha(String password)throws NoUpperAlphaException{
-        for(int i = 0; i < password.length(); i++){
-            if(Character.isUpperCase(password.charAt(i))){
-                return true;
-            }
-        }
-        return false;
+        match = upper.matcher(password);
+        if(!match.matches())
+            throw NoUpperAlphaException;
+        return true;
     }
 
     public static boolean hasLowerAlpha(String password)throws NoLowerAlphaException{
-        for(int i = 0; i < password.length(); i++){
-            if(Character.isLowerCase(password.charAt(i))){
-                return true;
-            }
-        }
-        return false;
+        match = lower.matcher(password);
+        if(!match.matches())
+            throw NoLowerAlphaException;
+        return true;
     }
     
     public static boolean hasDigit(String password)throws NoDigitException{
-        for(int i = 0; i < password.length; i++){
-            if(Character.isDigit(password.charAt(i))){
-                return true;
-            }
-        }
-        return false;
+        match = digit.matcher(password);
+        if(!match.matches())
+            throw NoDigitException;
+        return true;
     }
 
     public static boolean hasSpecialChar(String password)throws NoSpecialCharacterException{
-        for(int i = 0; i < password.length; i++){
-            if(!Character.isLetter(password.charAt(i)) && Character.isDigit(password.charAt(i)))
-                return true;   
-        }
-        return false;
+        match = special.matcher(password);
+        if(!match.matches())
+            throw NoSpecialCharacterException;
+        return true;
     }
 
     public static boolean noSameCharInSequence(String password)throws InvalidSequenceException{
         for(int i = 1; i < password.length - 1; i++){
             if(password.charAt(i) == password.charAt(i - 1) && password.charAt(i) == password.charAt(i + 1))
-                return false;
+                throw InvalidSequenceException;
         }
         return true;
     }
 
     public static boolean isValidPassword(String password)throws LengthException, NoUpperAlphaException, NoLowerAlphaException, NoDigitException, NoSpecialCharacterException, InvalidSequenceException{
-        return (isValidLength(password) && hasUpperAlpha(password) && hasLowerAlpha(password) && hasDigit(password) && hasSpecialChar(password) && noSameCharInSequence(password));
+        if(isValidLength(password) && hasUpperAlpha(password) && hasLowerAlpha(password) && hasDigit(password) && hasSpecialChar(password) && noSameCharInSequence(password))
+            return true;
+        else{
+            passwords.add(password);
+            return false;
+        }
     }
 
     public static boolean hasBetweenSixAndNineChars(String password){
@@ -75,11 +81,12 @@ public class PasswordCheckerUtility {
     }
 
     public static boolean isWeakPassword(String password)throws WeakPasswordException{
-        return (isValidLength(password) && hasBetweenSixAndNineChars(password));
+        if(isValidLength(password) && hasBetweenSixAndNineChars(password))
+            throw WeakPasswordException;
+        return true;
     }
 
     public static ArrayList<String> getInvalidPasswords(ArrayList<String> passwords){
-
+        return passwords;
     }
-
 }
