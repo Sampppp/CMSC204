@@ -25,7 +25,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
- 
+import exceptions.*;
 public class NotationGui extends Application {
 
 	private TextField infixtxt, postfixtxt, postfixtxt2;

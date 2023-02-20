@@ -3,7 +3,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import exceptions.*;
 class NotationGFATests {
 	public MyQueue<String> stringQ;
 	public MyStack<String> stringS;
@@ -22,7 +22,7 @@ class NotationGFATests {
 
 	 
 	@Test
-	public void testIsEmptyQueue() {
+	public void testIsEmptyQueue() throws QueueUnderflowException {
 		assertEquals(false,stringQ.isEmpty());
 		stringQ.dequeue();
 		assertEquals(true, stringQ.isEmpty());
@@ -45,14 +45,14 @@ class NotationGFATests {
 	}
 	
 	@Test
-	public void testIsEmptyStack() {
+	public void testIsEmptyStack() throws StackUnderflowException {
 		assertEquals(false,stringS.isEmpty());
 		stringS.pop();
 		assertEquals(true, stringS.isEmpty());
 	}
 
 	@Test
-	public void testIsFull() {
+	public void testIsFull() throws StackOverflowException {
 		assertEquals(false, stringS.isFull());
 		stringS.push("b");
 		assertEquals(true, stringS.isFull());

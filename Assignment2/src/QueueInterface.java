@@ -1,6 +1,8 @@
  
 import java.util.ArrayList;
 
+import exceptions.*;
+
 /** Interface for a Queue data structure
  * 
  *  @param <T> data type

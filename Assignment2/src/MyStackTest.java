@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
-
+import exceptions.*;
 public class MyStackTest {
 	public MyStack<String> stringS;
 	public String a="a", b="b", c="c", d="d", e="e", f="f";
@@ -33,7 +33,7 @@ public class MyStackTest {
 	}
 
 	@Test
-	public void testIsEmpty() {
+	public void testIsEmpty() throws StackUnderflowException {
 		assertEquals(false,stringS.isEmpty());
 		stringS.pop();
 		stringS.pop();
@@ -42,7 +42,7 @@ public class MyStackTest {
 	}
 
 	@Test
-	public void testIsFull() {
+	public void testIsFull() throws StackOverflowException {
 		assertEquals(false, stringS.isFull());
 		stringS.push(d);
 		stringS.push(e);
@@ -74,7 +74,7 @@ public class MyStackTest {
 	}
 	
 	@Test
-	public void testTop() {
+	public void testTop() throws StackUnderflowException, StackOverflowException {
 		assertEquals(c, stringS.top());
 		stringS.push(d);
 		assertEquals(d, stringS.top());
@@ -84,7 +84,7 @@ public class MyStackTest {
 	}
 
 	@Test
-	public void testSize() {
+	public void testSize() throws StackOverflowException, StackUnderflowException {
 		assertEquals(3, stringS.size());
 		stringS.push(d);
 		assertEquals(4, stringS.size());
@@ -120,7 +120,7 @@ public class MyStackTest {
 	}
 	
 	@Test
-	public void testToString() {
+	public void testToString() throws StackOverflowException {
 		assertEquals("abc", stringS.toString());
 		stringS.push(d);
 		assertEquals("abcd", stringS.toString());
@@ -135,7 +135,7 @@ public class MyStackTest {
 	}
 	
 	@Test
-	public void testToStringDelimiter() {
+	public void testToStringDelimiter() throws StackOverflowException {
 		assertEquals("a%b%c", stringS.toString("%"));
 		stringS.push(d);
 		assertEquals("a&b&c&d", stringS.toString("&"));
@@ -144,7 +144,7 @@ public class MyStackTest {
 	}
 
 	@Test
-	public void testFill() {
+	public void testFill() throws StackUnderflowException {
 		fill.add("apple");
 		fill.add("banana");
 		fill.add("carrot");

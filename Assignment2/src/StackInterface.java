@@ -1,6 +1,8 @@
  
 import java.util.ArrayList;
 
+import exceptions.*;
+
 /** Interface for a generic Stack data structure
  * 
  * @param <T> data type
@@ -80,6 +82,5 @@ public interface StackInterface<T> {
 	  * @param list elements to be added to the Stack from bottom to top
 	  * @throws StackOverflowException if stack gets full
 	  */
-	public void fill(ArrayList<T> list);
- 
+	public void fill(ArrayList list);
 }
