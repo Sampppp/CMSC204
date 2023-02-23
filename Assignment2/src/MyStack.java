@@ -1,24 +1,36 @@
 import java.util.ArrayList;
 import exceptions.*;
-public class MyStack<T> implements StackInterface{
+public class MyStack<T> implements StackInterface<T>{
 
-	private ArrayList<T> stack;
-	private int top = -1;
-	private int size = 1;
-
-
-	
-	
-	
-	public MyStack(int size) {
-		if (size < 1)
-			throw new IllegalArgumentException("Stack size must be positive");
-		this.size = size;
-		stack = new ArrayList<>(size);
-	}
+	private T[] stack;
+	private int top;
+	private boolean integrity;
+	private static final int DEFAULT_CAPACITY = 50;
+	private static final int MAX_CAPACITY = 10000;
 	
 	public MyStack() {
-		stack = new ArrayList<>(size);
+		this(DEFAULT_CAPACITY);
+	}
+	
+	public MyStack(int size) {
+		integrity = false;
+		checkCapacity(size);
+		
+		@SuppressWarnings("unchecked")
+		T[] tempStack = (T[])new Object[size];
+		stack = tempStack;
+		top = -1;
+		integrity = true;
+	}
+	
+	private void checkIntegrity() {
+		if(!integrity)
+			throw new SecurityException();
+	}
+	
+	private void checkCapacity(int size) {
+		if(size > MAX_CAPACITY || size < 1)
+			throw new IllegalStateException();
 	}
 	
 	@Override
@@ -28,24 +40,26 @@ public class MyStack<T> implements StackInterface{
 
 	@Override
 	public boolean isFull() {
-		return top + 1 == size;
+		return top + 1 == stack.length;
 	}
 
 	@Override
 	public T pop() throws StackUnderflowException {
-		if(top == -1)
+		checkIntegrity();
+		if(isEmpty())
 			throw new StackUnderflowException();
-		T data = stack.get(top);
-		stack.set(top, null);
+		T data = stack[top];
+		stack[top] = null;
 		top--;
 		return data;
 	}
 
 	@Override
 	public T top() throws StackUnderflowException {
-		if(top == -1)
+		checkIntegrity();
+		if(isEmpty())
 			throw new StackUnderflowException();
-		return stack.get(top);
+		return stack[top];
 	}
 
 	@Override
@@ -54,11 +68,11 @@ public class MyStack<T> implements StackInterface{
 	}
 
 	@Override
-	public boolean push(Object e) throws StackOverflowException {
+	public boolean push(T e) throws StackOverflowException {
+		checkIntegrity();
 		if(isFull())
 			throw new StackOverflowException();
-		stack.add((T) e);
-		top++;
+		stack[++top] = e;
 		return true;
 	}
 
@@ -70,27 +84,27 @@ public class MyStack<T> implements StackInterface{
 	@Override
 	public String toString(String delimiter) {
 		String temp = "";
-		for(int i = 0; i < stack.size(); i++) {
-			if(stack.get(i) != null) {
-				temp += stack.get(i);
-				if(i != stack.size() - 1)
+		for(int i = 0; i < stack.length; i++) {
+			if(stack[i] != null) {
+				if(i != 0)
 					temp += delimiter;
+				temp += stack[i];
 			}	
 		}
 		return temp;
 	}
 
 	@Override
-	public void fill(ArrayList list){
+	public void fill(ArrayList<T> list){
         ArrayList<T> copy = new ArrayList<>();
     	for(int i = 0; i < list.size(); i++)
-    		copy.add((T) list.get(i));
+    		copy.add(list.get(i));
     	
     	for(int i = 0; i < copy.size(); i++){
             try {
                 push(copy.get(i));
             }
-            catch(StackOverflowException e){
+            catch(Exception e){
                 e.printStackTrace();
             }
         }

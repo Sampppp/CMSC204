@@ -1,58 +1,74 @@
 import java.util.ArrayList;
 import exceptions.*;
 
-public class MyQueue<T> implements QueueInterface{
+public class MyQueue<T> implements QueueInterface<T>{
 	
-	private ArrayList<T> queue;
+	private T[] queue;
 	private int front;
 	private int back;
-	private int size = 1;
-	
-	public MyQueue(int size) {
-		if (size < 1)
-			throw new IllegalArgumentException("Stack size must be positive");
-		this.size = size;
-		queue = new ArrayList<>(size);
-		front = 0;
-		back = 0;
-	}
+	private boolean integrity;
+	private static final int DEFAULT_CAPACITY = 50;
+	private static final int MAX_CAPACITY = 10000;
 	
 	public MyQueue() {
-		queue = new ArrayList<>(size);
+		this(DEFAULT_CAPACITY);
 	}
-			
+	
+	public MyQueue(int size) {
+		integrity = false;
+		checkCapacity(size);
+		
+		@SuppressWarnings("unchecked")
+		T[] tempQueue = (T[])new Object[size + 1];
+		queue = tempQueue;
+		front = 0;
+		back = size;
+		integrity = true;
+	}
+	
+	private void checkIntegrity() {
+		if(!integrity)
+			throw new SecurityException();
+	}
+	
+	private void checkCapacity(int size) {
+		if(size > MAX_CAPACITY || size < 1)
+			throw new IllegalStateException();
+	}	
 	
 	@Override
 	public boolean isEmpty() {
-		return front == back;
+		return front == (back + 1) % queue.length;
 	}
 
 	@Override
 	public boolean isFull() {
-		return size == back;
+		return front == ( back + 2) % queue.length;
 	}
 
 	@Override
 	public T dequeue() throws QueueUnderflowException {
+		checkIntegrity();
 		if(isEmpty())
 			throw new QueueUnderflowException();
-		T temp = queue.get(front);
-		queue.remove(front);
-		back--;
+		T temp = queue[front];
+		queue[front] = null;
+		front = (front + 1) % queue.length;
 		return temp;
 	}
 
 	@Override
 	public int size() {
-		return queue.size();
+		return back + 1;
 	}
 
 	@Override
-	public boolean enqueue(Object e) throws QueueOverflowException {
+	public boolean enqueue(T e) throws QueueOverflowException {
+		checkIntegrity();
 		if(isFull())
 			throw new QueueOverflowException();
-		queue.add(back, (T) e);
-		back++;
+		back = (back + 1) % queue.length;
+		queue[back] = e;
 		return true;
 	}
 
@@ -64,22 +80,29 @@ public class MyQueue<T> implements QueueInterface{
 	@Override
 	public String toString(String delimiter) {
 		String temp = "";
-		for(int i = 0; i < queue.size(); i++) {
-			if(queue.get(i) != null) {
-				temp += queue.get(i);
-				if(i != queue.size() - 1)
+		for(int i = 0; i < queue.length; i++) {
+			if(queue[i] != null) {
+				if(i != 0)
 					temp += delimiter;
+				temp += queue[i];
 			}	
 		}
 		return temp;
 	}
 
 	@Override
-	public void fill(ArrayList list) {
-		for(int i = 0; i < list.size(); i++) {
-			queue.add((T) list.get(i));
-			back++;
-		}
-	}
-	
+	public void fill(ArrayList<T> list){
+        ArrayList<T> copy = new ArrayList<>();
+    	for(int i = 0; i < list.size(); i++)
+    		copy.add(list.get(i));
+    	
+    	for(int i = 0; i < copy.size(); i++){
+            try {
+            	enqueue(copy.get(i));
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 }
