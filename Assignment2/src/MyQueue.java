@@ -64,8 +64,12 @@ public class MyQueue<T> implements QueueInterface{
 	@Override
 	public String toString(String delimiter) {
 		String temp = "";
-		for(int i = 0; i < size; i++) {
-			temp += queue.get(i) + delimiter;
+		for(int i = 0; i < queue.size(); i++) {
+			if(queue.get(i) != null) {
+				temp += queue.get(i);
+				if(i != queue.size() - 1)
+					temp += delimiter;
+			}	
 		}
 		return temp;
 	}

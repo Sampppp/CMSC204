@@ -11,6 +11,7 @@
    Print your Name here: Samson Pak
 */
 import exceptions.*;
+import java.lang.Math;
 public class Notation {
 	//Constructor
 	public Notation(){
@@ -19,10 +20,34 @@ public class Notation {
 	
 	public static double evaluatePostfixExpression(String postfixExpr) throws InvalidNotationFormatException{
 		return 0;
+		
 	}
 	
 	public static String convertPostfixToInfix(String postfix) throws InvalidNotationFormatException{
-		return "";
+		MyStack<String> stack = new MyStack<>();
+		try {
+			for(int i=0; i < postfix.length(); i++) {
+				char c = postfix.charAt(i);
+				switch(c) {
+				case '^':
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+					String b = stack.pop();
+					String a = stack.pop();
+					stack.push("(" + a + c + b + ")");
+					break;
+				default:
+					stack.push("" + c);
+					break;
+				}
+			}
+			return stack.pop();
+		}
+		catch(Exception e) {
+			throw new InvalidNotationFormatException();
+		}
 	}
 	
 	public static String convertInfixToPostfix(String infix) throws InvalidNotationFormatException{
@@ -31,6 +56,10 @@ public class Notation {
 		try {
 			for(int i = 0; i < infix.length(); i++) {
 				char nextChar = infix.charAt(i);
+				if(Character.isDigit(nextChar)) {	
+					stack.push(nextChar);
+					continue;
+				}
 				switch(nextChar) {
 				case '^':
 					stack.push(nextChar);
@@ -47,7 +76,7 @@ public class Notation {
 				case '(':
 			         stack.push(nextChar);
 			         break;
-			      case ')': // Stack is not empty if infix expression is valid 
+			    case ')': // Stack is not empty if infix expression is valid 
 			         char topOperator = stack.pop(); 
 			         while (topOperator != '(')
 			         {
