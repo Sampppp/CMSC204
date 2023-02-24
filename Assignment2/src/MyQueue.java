@@ -43,7 +43,7 @@ public class MyQueue<T> implements QueueInterface<T>{
 
 	@Override
 	public boolean isFull() {
-		return front == ( back + 2) % queue.length;
+		return front == (back + 2) % queue.length;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class MyQueue<T> implements QueueInterface<T>{
 
 	@Override
 	public int size() {
-		return back + 1;
+		return (back - front + 1) % queue.length;
 	}
 
 	@Override

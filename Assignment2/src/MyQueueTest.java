@@ -15,6 +15,7 @@ public class MyQueueTest {
 	// STUDENT: student tests will use the doubleQ
 	public MyQueue<Double> doubleQ;
 	// STUDENT: add variables as needed for your student tests
+	public double aa=0, bb=1, cc=2, dd=3, ee=4, ff=5;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -24,6 +25,10 @@ public class MyQueueTest {
 		stringQ.enqueue(c);
 		
 		//STUDENT: add setup for doubleQ for student tests
+		doubleQ = new MyQueue<Double>(5);
+		doubleQ.enqueue(aa);
+		doubleQ.enqueue(bb);
+		doubleQ.enqueue(cc);
 	}
 
 	@AfterEach
@@ -62,7 +67,20 @@ public class MyQueueTest {
 	@Test
 	public void testDequeueStudent() {
 		//Use the doubleQ for student tests
-		fail("Not yet implemented");
+		try {
+			assertTrue(aa == doubleQ.dequeue());
+			assertTrue(bb == doubleQ.dequeue());
+			assertTrue(cc == doubleQ.dequeue());
+			//Queue is empty, next statement should cause QueueUnderFlowException
+			doubleQ.dequeue();
+			assertTrue("This should have caused an QueueUnderflowException", false);
+		}
+		catch (QueueUnderflowException e){
+			assertTrue("This should have caused an QueueUnderflowException", true);
+		}
+		catch (Exception e){
+			assertTrue("This should have caused an QueueUnderflowException", false);
+		}
 	}
 
 	@Test
@@ -98,7 +116,22 @@ public class MyQueueTest {
 	@Test
 	public void testEnqueueStudent() {
 		//Use the doubleQ for student tests
-		fail("Not yet implemented");
+		try {
+			assertEquals(3, doubleQ.size());
+			assertEquals(true, doubleQ.enqueue(dd));
+			assertEquals(4, doubleQ.size());
+			assertEquals(true, doubleQ.enqueue(ee));
+			assertEquals(5, doubleQ.size());
+			//Queue is full, next statement should cause QueueOverFlowException
+			doubleQ.enqueue(ff);
+			assertTrue("This should have caused an QueueOverflowException", false);
+		}
+		catch (QueueOverflowException e){
+			assertTrue("This should have caused an QueueOverflowException", true);
+		}
+		catch (Exception e){
+			assertTrue("This should have caused an QueueOverflowException", false);
+		}
 	}
 
 	@Test
@@ -119,9 +152,13 @@ public class MyQueueTest {
 	}
 	
 	@Test
-	public void testToStringStudent() {
+	public void testToStringStudent() throws QueueOverflowException {
 		//Use the doubleQ for student tests
-		fail("Not yet implemented");
+		assertEquals("0.01.02.0", doubleQ.toString());
+		doubleQ.enqueue(dd);
+		assertEquals("0.01.02.03.0", doubleQ.toString());
+		doubleQ.enqueue(ee);
+		assertEquals("0.01.02.03.04.0", doubleQ.toString());
 	}
 
 	@Test
