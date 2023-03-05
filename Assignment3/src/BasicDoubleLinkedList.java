@@ -1,3 +1,15 @@
+/*
+ * Class: CMSC204 
+ * Instructor: David Kuijt
+ * Description: Implementation of a sorted and unsorted linked list
+ * Due: 03/05/2023
+ * Platform/compiler:
+ * I pledge that I have completed the programming 
+ * assignment independently. I have not copied the code 
+ * from a student or any source. I have not given my code 
+ * to any student.
+   Print your Name here: Samson Pak
+*/
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -65,8 +77,13 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 		
 		for(int i = 0; i < size; i++) {
 			if(comparator.compare(select.data, targetData) == 0) {			
+				//if selected node is the only one in the list
+				if(size == 1) {
+					head = null;
+					tail = null;
+				}
 				//if selected node is at the head of the list
-				if(i == 0){
+				else if(i == 0){
 					head = select.next;
 					select.next.prev = null;
 				}
@@ -85,8 +102,7 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 				size--;
 				//return the selected node
 				return select;
-			}
-			
+			}	
 			select = select.next;
 		}
 		return null;
@@ -99,14 +115,13 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 			if(size != 1) {
 				head.next.prev = null;
 				head = head.next;
-				
 			}
 			else {
 				head = null;
 				tail = null;
-			}
-				
+			}			
 		}
+		size--;
 		return temp;
 	}
 	
@@ -123,6 +138,7 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 				tail = null;
 			}
 		}
+		size--;
 		return temp;
 	}
 	
