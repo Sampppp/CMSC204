@@ -142,8 +142,8 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 	
 	
 	protected class Node{
-		private T data;
-		private Node prev, next;
+		protected T data;
+		protected Node prev, next;
 		
 		//constructors
 		Node(){
