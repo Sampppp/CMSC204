@@ -56,7 +56,7 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 	}
 	
 	@Override
-	public Iterator<T> iterator() {
+	public ListIterator<T> iterator() {
 		return new DoubleLinkedListIterator();
 	}
 	
@@ -127,7 +127,13 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 	}
 	
 	protected ArrayList<T> toArrayList(){
-		return null;
+		ArrayList<T> arrayList = new ArrayList<>();
+		DoubleLinkedListIterator iter = new DoubleLinkedListIterator();
+		
+		while(iter.hasNext()) {
+			arrayList.add(iter.next());
+		}
+		return arrayList;
 	}
 	
 	
@@ -160,38 +166,39 @@ public class BasicDoubleLinkedList<T> implements Iterable<T>{
 	}
 	
 	protected class DoubleLinkedListIterator implements ListIterator<T>{
-		Node select;
+		Node nextNode, prevNode;
 		
 		DoubleLinkedListIterator(){
-			select = head;
+			nextNode = head;
 		}
 		
 		@Override
 		public boolean hasNext() {
-			return (next() != null);
+			return (nextNode != null);
 		}
 
 		@Override
 		public T next() throws NoSuchElementException{
-			if(select.next == null)
+			if(!hasNext())
 				throw new NoSuchElementException();
-			
-			select = select.next;
-			return select.prev.data;
+			prevNode = nextNode;
+			nextNode = nextNode.next;
+			return prevNode.data;
 		}
 
 		@Override
 		public boolean hasPrevious() {
-			return (previous() != null);
+			return (prevNode != null);
 		}
 
 		@Override
 		public T previous() throws NoSuchElementException{
-			if(select.prev == null)
+			if(!hasPrevious())
 				throw new NoSuchElementException();
+			nextNode = prevNode;
+			prevNode = prevNode.prev;
 			
-			select = select.prev;
-			return select.next.data;
+			return nextNode.data;
 		}
 
 		
