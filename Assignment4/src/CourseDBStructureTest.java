@@ -43,11 +43,11 @@ public class CourseDBStructureTest {
 
 		//Create a course 
 		CourseDBElement cde1 = new CourseDBElement("CMSC500", 39999, 4, "SC100", "Nobody InParticular");
-		
 		cds.add(cde1);  //add to data structure
 		cds.add(cde1);  // add it again. add method  should  ignore it
 	 
-		ArrayList<String> courseList = cds.showAll(); 
+		ArrayList<String> courseList = cds.showAll();
+		assertEquals(1, courseList.size());//
 		assertTrue(courseList.size()==1);  
 		
 		//Create another course
