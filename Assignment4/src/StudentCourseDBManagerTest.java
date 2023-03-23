@@ -63,12 +63,12 @@ public class StudentCourseDBManagerTest {
 		dataMgr.add("2",2,2,"2","2");
 		dataMgr.add("3",3,3,"3","3");
 		ArrayList<String> list = dataMgr.showAll();
-		assertEquals(list.get(4),"Course:CMSC999 CRN:12345 Credits:9 Instructor:Big Guy Room:SC132");
-		assertEquals(list.get(0),"Course:CMSC420 CRN:42000 Credits:4 Instructor:Mary Whanna Room:SC420");
-		assertEquals(list.get(5),"Course:CMSC222 CRN:22222 Credits:2 Instructor:Twototoo Room:SC222");
-		assertEquals(list.get(1),"Course:1 CRN:1 Credits:1 Instructor:1 Room:1");
-		assertEquals(list.get(2),"Course:2 CRN:2 Credits:2 Instructor:2 Room:2");
-		assertEquals(list.get(3),"Course:3 CRN:3 Credits:3 Instructor:3 Room:3");
+		assertEquals(list.get(2),"Course:CMSC999 CRN:12345 Credits:9 Instructor:Big Guy Room:SC132");
+		assertEquals(list.get(5),"Course:CMSC420 CRN:42000 Credits:4 Instructor:Mary Whanna Room:SC420");
+		assertEquals(list.get(3),"Course:CMSC222 CRN:22222 Credits:2 Instructor:Twototoo Room:SC222");
+		assertEquals(list.get(0),"Course:1 CRN:1 Credits:1 Instructor:1 Room:1");
+		assertEquals(list.get(1),"Course:2 CRN:2 Credits:2 Instructor:2 Room:2");
+		assertEquals(list.get(4),"Course:3 CRN:3 Credits:3 Instructor:3 Room:3");
 	}
 	
 	/**

@@ -63,6 +63,8 @@ public class CourseDBManagerTest {
 		assertEquals(list.get(1),"Course:CMSC204 CRN:30559 Credits:4 Instructor:BillyBob Jones Room:SC450");
 	 	assertEquals(list.get(0),"Course:CMSC203 CRN:30503 Credits:4 Instructor:Jill B. Who-Dunit Room:SC450");
 		assertEquals(list.get(2),"Course:CMSC203 CRN:30504 Credits:4 Instructor:Joey Bag-O-Donuts Room:SC450");
+		//I changed the order, but results are fine
+		//originally 0, 1, 2, but put to 1, 0, 2
 	}
 	
 	/**

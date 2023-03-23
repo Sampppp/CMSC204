@@ -6,7 +6,7 @@ public class CourseDBStructure implements CourseDBStructureInterface{
 	private Node[] array;
 	private int size;
 	private final double LOAD_FACTOR = 1.5;
-	private final static int DEFAULT_SIZE = 10;
+	private final static int DEFAULT_SIZE = 10;//arbitrary default size I came up with
 	
 	public Node[] getArray() {
 		return array;
@@ -48,7 +48,9 @@ public class CourseDBStructure implements CourseDBStructureInterface{
 	
 	@Override
 	public void add(CourseDBElement element) {
-		int hash = element.getCRN() % size;//finds index for array
+		String stringHash = "" + element.getCRN();
+		int hash = stringHash.hashCode() % size;
+		
 		Node select = array[hash];
 		
 		if(select == null) {//adds if space is empty
@@ -71,7 +73,9 @@ public class CourseDBStructure implements CourseDBStructureInterface{
 
 	@Override
 	public CourseDBElement get(int crn) throws IOException {
-		int hash = crn % size;
+		String stringHash = "" + crn;
+		int hash = stringHash.hashCode() % size;
+		
 		if(array[hash] == null)
 			throw new IOException();
 		
