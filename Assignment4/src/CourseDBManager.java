@@ -46,8 +46,8 @@ public class CourseDBManager implements CourseDBManagerInterface {
 			String[] temp = in.nextLine().split("\\s");
 			String tempInstructor = "";
 			for(int i = 4; i < temp.length; i ++)
-				tempInstructor += temp[i];
-			add(temp[0], Integer.valueOf(temp[1]), Integer.valueOf(temp[2]), temp[3], tempInstructor);			
+				tempInstructor += temp[i] + " ";
+			add(temp[0], Integer.valueOf(temp[1]), Integer.valueOf(temp[2]), temp[3], tempInstructor.substring(0, tempInstructor.length() - 1));			
 		}
 		in.close();
 	
