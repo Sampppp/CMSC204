@@ -62,8 +62,8 @@ public class CourseDBElement implements Comparable<CourseDBElement>{
 	
 	@Override
 	public int compareTo(CourseDBElement o) {
-		if(o.id != id || o.crn != crn || o.credits != credits || o.roomNum != roomNum || o.instructor != instructor)
-			return 1;//not the same
-		return 0;//the same
+		if(o.crn == crn )
+			return 1;//update
+		return 0;//not the same
 	}
 }

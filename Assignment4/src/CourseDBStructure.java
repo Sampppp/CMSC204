@@ -6,14 +6,18 @@ public class CourseDBStructure implements CourseDBStructureInterface{
 	private Node[] array;
 	private int size;
 	private final double LOAD_FACTOR = 1.5;
+	private final static int DEFAULT_SIZE = 10;
 	
 	public Node[] getArray() {
 		return array;
 	}
 	
+	CourseDBStructure(){
+		this(DEFAULT_SIZE);
+	}
+	
 	CourseDBStructure(int a){//specified array size
-		//int num = (int) (a / LOAD_FACTOR);
-		int num = a;
+		int num = (int) (a / LOAD_FACTOR);
 		num = fkpt(num);
 		array = new Node[fkptp(num)];
 		size = array.length;
@@ -27,6 +31,8 @@ public class CourseDBStructure implements CourseDBStructureInterface{
 	
 	public int fkpt(int num) {//finds closest last 4k+3 number
 		int k = (num - 3) / 4;
+		if(((4 * k) + 3) < num)
+			k++;
 		return (4 * k) + 3;
 	}
 	
@@ -49,18 +55,26 @@ public class CourseDBStructure implements CourseDBStructureInterface{
 			array[hash] = new Node(element);
 			return;
 		}
-
-		while(select.next != null) {
-			if(select.data.compareTo(element) == 0)//if element is already there
+		while(select != null) {
+			if(select.data.compareTo(element) == 1) {//element update
+				select.data = element;
 				return;
+			}
+			else if(select.next == null)
+				break;
+			
 			select = select.next;
 		}
-		select.next = new Node(select, element, null);//appends if node exists
+		
+		select.next = new Node(select, element, null);//appends to end
 	}
 
 	@Override
 	public CourseDBElement get(int crn) throws IOException {
 		int hash = crn % size;
+		if(array[hash] == null)
+			throw new IOException();
+		
 		Node select = array[hash];
 		while(select.data.getCRN() != crn) {
 			if(select.next == null)
