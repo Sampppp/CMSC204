@@ -30,29 +30,25 @@ public class MorseCodeTree implements LinkedConverterTreeInterface<String> {
 
 	@Override
 	public void addNode(TreeNode<String> root, String code, String letter) {
-		TreeNode<String> temp = new TreeNode<String>(letter);
-		//code length 1
-		if(code.length() == 1) {
-			switch(code.charAt(0)){
-				case '.':
-					root.setLeft(temp);
-					return;
-				case '-':
-					root.setRight(temp);
-					return;
-			}
+		if (code.isEmpty()) {
+	        root.data = letter;
+	        return;
 		}
-		//code length > 1 
-		switch(code.charAt(0)){
-		case '.':
-			root.setLeft(temp);
-			addNode(temp, code.substring(1), letter);
-			break;
-		case '-':
-			root.setRight(temp);
-			addNode(temp, code.substring(1), letter);
-			break;
-		}
+		
+		switch(code.charAt(0)) {
+	    	case '.':
+	    		if (root.getLeft() == null) 
+		            root.setLeft(new TreeNode<String>(""));
+	    		addNode(root.getLeft(), code.substring(1), letter);
+	    		break;
+	    	case '-':
+	    		if (root.getRight() == null) 
+		            root.setRight(new TreeNode<String>(""));
+		        addNode(root.getRight(), code.substring(1), letter);
+		        break;
+	    	default:
+		        return;
+	    }
 	}
 
 	@Override
@@ -62,22 +58,21 @@ public class MorseCodeTree implements LinkedConverterTreeInterface<String> {
 
 	@Override
 	public String fetchNode(TreeNode<String> root, String code) {
-		if(code.length() == 1) {
-			switch(code.charAt(0)){
-			case '.':
-				return root.getLeft().getData();
-			case '-':
-				return root.getRight().getData();
-			}
-		}
-			
-		switch(code.charAt(0)){
+		if (code.isEmpty())
+			return root.data;
+		
+		switch(code.charAt(0)) {
 		case '.':
+			if (root.getLeft() == null)
+				return null;
 			return fetchNode(root.getLeft(), code.substring(1));
 		case '-':
+			if (root.getRight() == null)
+				return null;
 			return fetchNode(root.getRight(), code.substring(1));
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -102,26 +97,26 @@ public class MorseCodeTree implements LinkedConverterTreeInterface<String> {
 		insert(".-", "a");
 		insert("-.", "n");
 		insert("--", "m");
-		insert("", "s");
-		insert("", "u");
-		insert("", "r");
-		insert("", "w");
-		insert("", "d");
-		insert("", "k");
-		insert("", "g");
-		insert("", "o");
-		insert("", "h");
-		insert("", "v");
-		insert("", "f");
-		insert("", "l");
-		insert("", "p");
-		insert("", "j");
-		insert("", "b");
-		insert("", "x");
-		insert("", "c");
-		insert("", "y");
-		insert("", "z");
-		insert("", "q");
+		insert("...", "s");
+		insert("..-", "u");
+		insert(".-.", "r");
+		insert(".--", "w");
+		insert("-..", "d");
+		insert("-.-", "k");
+		insert("--.", "g");
+		insert("---", "o");
+		insert("....", "h");
+		insert("...-", "v");
+		insert("..-.", "f");
+		insert(".-..", "l");
+		insert(".--.", "p");
+		insert(".---", "j");
+		insert("-...", "b");
+		insert("-..-", "x");
+		insert("-.-.", "c");
+		insert("-.--", "y");
+		insert("--..", "z");
+		insert("--.-", "q");
 	}
 
 	@Override

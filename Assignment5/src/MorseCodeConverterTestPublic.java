@@ -16,8 +16,8 @@ public class MorseCodeConverterTestPublic {
 	
 	@Test
 	public void testConvertToEnglishString() {	
-		String converter1 = MorseCodeConverter.convertToEnglish(".... . .-.. .-.. --- / .-- --- .-. .-.. -.. ");
-		assertEquals("hello world",converter1);
+		String converter1 = MorseCodeConverter.convertToEnglish("... . .-.. .-.. --- / .-- --- .-. .-.. -.. ");
+		assertEquals("sello world",converter1);
 	}
 	
 	/**
@@ -37,8 +37,8 @@ public class MorseCodeConverterTestPublic {
 	@Test
 	public void testConvertMorseStringToEnglishString() {	
 		
-		String converter1 = MorseCodeConverter.convertToEnglish("- .... . / --.- ..- .. -.-. -.- / -... .-. --- .-- -. / ..-. --- -..- / .--- ..- -- .--. ... / --- ...- . .-. / - .... . / .-.. .- --.. -.-- / -.. --- --.");
-		assertEquals("the quick brown fox jumps over the lazy dog", converter1);
+		String converter1 = MorseCodeConverter.convertToEnglish(".- .... . / --.- ..- .. -.-. -.- / -... .-. --- .-- -. / ..-. --- -..- / .--- ..- -- .--. ... / --- ...- . .-. / - .... . / .-.. .- --.. -.-- / -.. --- --.");
+		assertEquals("ahe quick brown fox jumps over the lazy dog", converter1);
 
 	}
 	@Test
@@ -47,10 +47,27 @@ public class MorseCodeConverterTestPublic {
 		/*Make sure howDoILoveThee.txt is in the src directory for this 
 		  test to pass
 		*/
-		File file = new File("src/howDoILoveThee.txt"); 
+		File file = new File("src/Daisy.txt"); 
 		try {
-			assertEquals("how do i love thee let me count the ways", MorseCodeConverter.convertToEnglish(file));
-		} catch (FileNotFoundException e) {
+			assertEquals("give me your answer do", MorseCodeConverter.convertToEnglish(file));
+		}
+		catch (FileNotFoundException e) {
+			assertTrue("An unwanted exception was caught", false);
+		}
+		
+		File file1 = new File("src/DaisyDaisy.txt"); 
+		try {
+			assertEquals("im half crazy all for the love of you", MorseCodeConverter.convertToEnglish(file1));
+		}
+		catch (FileNotFoundException e) {
+			assertTrue("An unwanted exception was caught", false);
+		}
+		
+		File file2 = new File("src/LoveLooksNot.txt"); 
+		try {
+			assertEquals("love looks not with the eyes but with the mind", MorseCodeConverter.convertToEnglish(file2));
+		}
+		catch (FileNotFoundException e) {
 			assertTrue("An unwanted exception was caught", false);
 		}
 	}
