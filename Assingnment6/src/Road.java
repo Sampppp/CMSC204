@@ -1,10 +1,56 @@
 
 public class Road implements Comparable<Road>{
 
+	private String name;
+	private int distance;
+	
+	private Town end1;
+	private Town end2;
+	
+	Road(Town a, Town b, String c, int d){
+		name = c;
+		distance = d; 
+		
+		//add the endpoints
+		end1 = new Town(a);
+		end2 = new Town(b);
+		//set the connected towns to be adj
+		a.addAdj(b);
+		b.addAdj(b);
+	}
+	
+	public void setName(String a) {
+		name = a;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setDistance(int a) {
+		distance = a;
+	}
+	public int getDistance() {
+		return distance;
+	}
+	
+	public void setEnd1(Town a) {
+		end1 = a;
+	}
+	public Town getEnd1() {
+		return end1;
+	}
+	public void setEnd2(Town a) {
+		end2 = a;
+	}
+	public Town getEnd2() {
+		return end2;
+	}
+	
 	@Override
 	public int compareTo(Road o) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(name == o.getName())
+			return 1;
+		else
+			return 0;
 	}
 
 }
