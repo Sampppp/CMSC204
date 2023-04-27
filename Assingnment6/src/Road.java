@@ -7,7 +7,7 @@ public class Road implements Comparable<Road>{
 	private Town end1;
 	private Town end2;
 	
-	Road(Town a, Town b, String c, int d){
+	public Road(Town a, Town b, String c, int d){
 		name = c;
 		distance = d; 
 		
@@ -17,6 +17,15 @@ public class Road implements Comparable<Road>{
 		//set the connected towns to be adj
 		a.addAdj(b);
 		b.addAdj(b);
+	}
+	
+	public Road(Road a) {
+		name = a.getName();
+		distance = a.getDistance(); 
+		
+		//add the endpoints
+		end1 = new Town(a.getEnd1());
+		end2 = new Town(a.getEnd2());
 	}
 	
 	public void setName(String a) {

@@ -63,9 +63,9 @@ public class CarPanel extends JComponent
 	            	   
 	               }
 	            }
-	            catch (InterruptedException exception)
+	            catch (Exception exception)
 	            {
-	            	
+	            	System.out.println("Out of instruction stopping...");
 	            }
 	            finally
 	            {
