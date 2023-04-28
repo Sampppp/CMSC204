@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class Graph implements GraphInterface<Town, Road>{
@@ -21,19 +23,7 @@ public class Graph implements GraphInterface<Town, Road>{
 			roads.add(b[i]);
 		}
 		
-		for(int i = 0; i < roads.size(); i++) {
-			for(int j = 0; j < towns.size(); j++) {
-				if(roads.get(i).getEnd1().compareTo(towns.get(j)) == 1) {//looks for end1 match
-					for(int k = 0; k < towns.size(); k++) {
-						if(roads.get(i).getEnd2().compareTo(towns.get(k)) == 1) {//looks for end2 match
-							adjMatrix[j][k] = roads.get(i);//end1 and end2 match
-							break;
-						}
-					}
-					break;
-				}
-			}
-		}
+		regenerateGraph();
 	}
 	
 	public void regenerateGraph() {
@@ -78,7 +68,7 @@ public class Graph implements GraphInterface<Town, Road>{
 
 	@Override
 	public Road addEdge(Town sourceVertex, Town destinationVertex, int weight, String description) {
-		roads.add(new Road(sourceVertex, destinationVertex, description, weight));
+		roads.add(new Road(sourceVertex, destinationVertex, weight, description));
 		regenerateGraph();
 		return roads.get(roads.size());
 	}
@@ -119,32 +109,71 @@ public class Graph implements GraphInterface<Town, Road>{
 
 	@Override
 	public Set<Road> edgeSet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Road> set = new HashSet<>();
+		for(int i = 0; i < roads.size(); i++) {
+			set.add(roads.get(i));
+		}
+		return set;
 	}
 
 	@Override
 	public Set<Road> edgesOf(Town vertex) {
-		// TODO Auto-generated method stub
+		Set<Road> set = new HashSet<>();
+		for(int i = 0; i < towns.size(); i++){
+			if(towns.get(i).compareTo(vertex) == 1) {
+				for(int j = 0; j < adjMatrix.length; j++) {
+					if(adjMatrix[i][j] != null)
+						set.add(adjMatrix[i][j]);
+				}
+				return set;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Road removeEdge(Town sourceVertex, Town destinationVertex, int weight, String description) {
-		// TODO Auto-generated method stub
+		Road temp = new Road(sourceVertex, destinationVertex, weight, description);
+		for(int i = 0; i < roads.size(); i++) {
+			if(roads.get(i).compareTo(temp) == 1) {
+				roads.remove(i);
+				regenerateGraph();
+			}
+			return temp;
+		}
 		return null;
 	}
 
 	@Override
 	public boolean removeVertex(Town v) {
-		// TODO Auto-generated method stub
-		return false;
+		for(int i = 0; i < towns.size(); i++) {//searches for town
+			if(towns.get(i).compareTo(v) == 1) {//town found
+				towns.remove(i);//town gets removed from list
+				
+				Set<Road> set = new HashSet<>(edgesOf(v));//gets edge set of town
+				Iterator<Road> it = set.iterator();
+				int j = 0;
+				while(it.hasNext()) {//iterates through set
+					if(roads.get(j).compareTo(it.next()) == 1) {
+						roads.remove(j);//removes roads from list
+						continue;
+					}
+					i++;
+				}
+				regenerateGraph();
+				return true;
+			}
+		}
+		return false;		
 	}
 
 	@Override
 	public Set<Town> vertexSet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Town> set = new HashSet<>();
+		for(int i = 0; i < towns.size(); i++) {
+			set.add(towns.get(i));
+		}
+		return set;
 	}
 
 	@Override
@@ -157,7 +186,5 @@ public class Graph implements GraphInterface<Town, Road>{
 	public void dijkstraShortestPath(Town sourceVertex) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	
+	}	
 }

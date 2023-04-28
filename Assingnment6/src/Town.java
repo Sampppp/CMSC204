@@ -4,11 +4,8 @@ public class Town implements Comparable<Town>{
 	private ArrayList<Town> adj = new ArrayList<>();
 	private String name;
 	
-	Town(String a, ArrayList<Town> b){
+	Town(String a){
 		name = a;
-		for(int i = 0; i < b.size(); i++) {
-			adj.add(b.get(i));
-		}
 	}
 	
 	Town(Town a){
