@@ -22,6 +22,7 @@ public class Graph implements GraphInterface<Town, Road>{
 	private final int DEFAULT_SIZE = 20;
 	private int size;
 	
+	private int maxWeight = 0;
 	Graph(){
 		adjMatrix = new Road[DEFAULT_SIZE][DEFAULT_SIZE];
 		size = DEFAULT_SIZE;
@@ -41,25 +42,6 @@ public class Graph implements GraphInterface<Town, Road>{
 			adjMatrix[x][y] = roads.get(i);
 			adjMatrix[y][x] = roads.get(i);
 		}
-		
-		//testing
-		for(int i = 0; i < size; i++) {
-			for(int j = 0; j < size; j++) {
-				if(adjMatrix[i][j] != null)
-					System.out.print("1 ");
-				System.out.print("0 ");
-			}
-			System.out.print("\n");
-		}
-		for(int i = 0; i < towns.size(); i++) {
-			System.out.print(towns.get(i).getName() + " ");
-		}
-		System.out.print("\n");
-		for(int i = 0; i < roads.size(); i++) {
-			System.out.print(roads.get(i).getName() + " ");
-		}
-		System.out.print("\n");
-		System.out.print(adjMatrix[1][0].getEnd1().getName());
 	}
 	
 	public Town getVertex(Town a) {
@@ -162,11 +144,48 @@ public class Graph implements GraphInterface<Town, Road>{
 		return null;
 	}
 
-	@Override
+	@Override//fix me @ !!!!mjtyfghjuyyughjktyfcvgrtyfdgfrtydgrtydfgrtyudftyufrgtyufgh
 	public void dijkstraShortestPath(Town sourceVertex) {
-	
-	
+		int[] distance = new int[towns.size()];
+		boolean[] pathSet = new boolean[towns.size()];
 		
+		for(int i = 0; i < roads.size(); i++) {//finds max weight
+			if(i == 0) {
+				maxWeight = roads.get(i).getDistance();
+				continue;
+			}
+			if(roads.get(i).getDistance() > maxWeight)
+				maxWeight = roads.get(i).getDistance();
+		}
+		for(int i = 0; i < distance.length; i++) {
+			distance[i] = maxWeight;
+		}
+		
+		distance[towns.indexOf(sourceVertex)] = 0;//where path starts
+		
+		for(int i = 0; i < towns.size() - 1; i++) {
+			int u = minDistance(distance, pathSet);
+			pathSet[u] = true;
+			
+			for(int j = 0; j < towns.size(); j++) {
+				if(pathSet[j] && adjMatrix[u][j] != null && distance[u] != maxWeight && distance[u] + adjMatrix[u][j].getDistance() < distance[j])
+					distance[j] = distance[u] + adjMatrix[u][j].getDistance();
+			}
+		}
 	}
-
+	
+	int minDistance(int[] distance, boolean[] pathSet) {
+		int min = maxWeight;
+		int min_index = -1;
+		
+		for(int i = 0; i < towns.size(); i++) {
+			if(pathSet[i] == false && distance[i] <= min) {
+				min = distance[i];
+				min_index = i;
+			}
+		}
+		return min_index;
+	}
+	
+	
 }
