@@ -14,56 +14,51 @@ public class Road implements Comparable<Road>{
 		//add the endpoints
 		end1 = new Town(a);
 		end2 = new Town(b);
-		//set the connected towns to be adj
-		a.addAdj(b);
-		b.addAdj(b);
 	}
 	
 	public Road(Town a, Town b, String c) {
 		this(a, b, 1, c);
 	}
 	
-	public Road(Road a) {
-		name = a.getName();
-		distance = a.getDistance(); 
-		
-		//add the endpoints
-		end1 = new Town(a.getEnd1());
-		end2 = new Town(a.getEnd2());
+	public Road(Road a) {//copy constructor
+		this(a.getEnd1(), a.getEnd2(), a.getDistance(), a.getName());
+	}
+
+	public boolean contains(Town a) {
+		if(end1.equals(a) || end2.equals(a))
+			return true;
+		return false;
 	}
 	
-	public void setName(String a) {
-		name = a;
+	@Override
+	public String toString() {
+		return String.format("%s, %s, %d, %s", end1.getName(), end2.getName(), distance, name);
 	}
+	
 	public String getName() {
 		return name;
 	}
-	public void setDistance(int a) {
-		distance = a;
-	}
-	public int getDistance() {
-		return distance;
-	}
 	
-	public void setEnd1(Town a) {
-		end1 = a;
-	}
 	public Town getEnd1() {
 		return end1;
 	}
-	public void setEnd2(Town a) {
-		end2 = a;
-	}
+	
 	public Town getEnd2() {
 		return end2;
 	}
 	
 	@Override
-	public int compareTo(Road o) {
-		if(name == o.getName())
-			return 1;
-		else
-			return 0;
+	public int compareTo(Road o) {//if names are equal
+		return name.compareTo(o.getName());
 	}
-
+	
+	public int getDistance() {
+		return distance;
+	}
+	
+	@Override
+	public boolean equals(Object a) {//if all fields are equal
+		Road b = (Road)a;
+		return (compareTo(b) == 0 && contains(b.getEnd1()) && contains(b.getEnd2()));
+	}
 }

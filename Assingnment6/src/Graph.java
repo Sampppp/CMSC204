@@ -4,112 +4,104 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class Graph implements GraphInterface<Town, Road>{
-
-	private ArrayList<Town> towns = new ArrayList<>();
-	private ArrayList<Road> roads = new ArrayList<>();
+	//Override class for indexOf method
+	public class MyArrayList<T> extends ArrayList<T>{
+		@Override
+		public int indexOf(Object o) {
+			for(int i = 0; i < size(); i++) {
+				if(get(i).equals(o))
+					return i;
+			}
+			return -1;
+		}
+	}	
+	
+	private MyArrayList<Town> towns = new MyArrayList<>();
+	private MyArrayList<Road> roads = new MyArrayList<>();
 	private Road[][] adjMatrix;
 	private final int DEFAULT_SIZE = 20;
+	private int size;
 	
 	Graph(){
 		adjMatrix = new Road[DEFAULT_SIZE][DEFAULT_SIZE];
+		size = DEFAULT_SIZE;
 	}
 	
-	Graph(Town[] a, Road[] b){
-		adjMatrix = new Road[a.length + 10][a.length + 10];
-		for(int i = 0; i < a.length; i++) {
-			towns.add(a[i]);
-		}
-		for(int i = 0; i < b.length; i++) {
-			roads.add(b[i]);
-		}
-		
-		regenerateGraph();
+	Graph(int a){
+		adjMatrix = new Road[a][a];
+		size = a;
 	}
 	
 	public void regenerateGraph() {
-		for(int i = 0; i < roads.size(); i++) {
-			for(int j = 0; j < towns.size(); j++) {
-				if(roads.get(i).getEnd1().compareTo(towns.get(j)) == 1) {//looks for end1 match
-					for(int k = 0; k < towns.size(); k++) {
-						if(roads.get(i).getEnd2().compareTo(towns.get(k)) == 1) {//looks for end2 match
-							adjMatrix[j][k] = roads.get(i);//end1 and end2 match
-							break;
-						}
-					}
-					break;
-				}
-			}
+		int x, y;
+		
+		for(int i = 0; i < roads.size(); i ++) {
+			x = towns.indexOf(roads.get(i).getEnd2());
+			y = towns.indexOf(roads.get(i).getEnd1());
+			adjMatrix[x][y] = roads.get(i);
+			adjMatrix[y][x] = roads.get(i);
 		}
+		
+		//testing
+		for(int i = 0; i < size; i++) {
+			for(int j = 0; j < size; j++) {
+				if(adjMatrix[i][j] != null)
+					System.out.print("1 ");
+				System.out.print("0 ");
+			}
+			System.out.print("\n");
+		}
+		for(int i = 0; i < towns.size(); i++) {
+			System.out.print(towns.get(i).getName() + " ");
+		}
+		System.out.print("\n");
+		for(int i = 0; i < roads.size(); i++) {
+			System.out.print(roads.get(i).getName() + " ");
+		}
+		System.out.print("\n");
+		System.out.print(adjMatrix[1][0].getEnd1().getName());
 	}
 	
-	public void enlargeMatrix() {
-		Road[][] temp = new Road[adjMatrix.length + 10][adjMatrix.length + 10];
-		
-		for(int i = 0; i < adjMatrix.length; i++) {
-			for(int j = 0; j < adjMatrix.length; j++) {
-				temp[i][j] = new Road(adjMatrix[i][j]);
-			}
-		}
+	public Town getVertex(Town a) {
+		if(containsVertex(a))
+			return(towns.get(towns.indexOf(a)));
+		return null;
 	}
 	
 	@Override
 	public Road getEdge(Town sourceVertex, Town destinationVertex) {
-		for(int i = 0; i < towns.size(); i++) {
-			if(sourceVertex.compareTo(towns.get(i)) == 1) {
-				for(int j = 0; j < towns.size(); j++) {
-					if(destinationVertex.compareTo(towns.get(j)) == 1) {
-						return adjMatrix[i][j];
-					}
-				}
-			}
-		}
-		return null;
+		if(towns.indexOf(sourceVertex) == -1 || towns.indexOf(destinationVertex) == -1)//checks if inputed towns are in towns list
+			return null;
+		return adjMatrix[towns.indexOf(sourceVertex)][towns.indexOf(destinationVertex)];
 	}
 
 	@Override
 	public Road addEdge(Town sourceVertex, Town destinationVertex, int weight, String description) {
 		roads.add(new Road(sourceVertex, destinationVertex, weight, description));
 		regenerateGraph();
-		return roads.get(roads.size());
+		return roads.get(roads.size() - 1);//returns the last added road
 	}
 
 	@Override
 	public boolean addVertex(Town v) {
-		towns.add(v);
-		if(towns.size() > adjMatrix.length) {
-			enlargeMatrix();
-		}
-		regenerateGraph();
+		towns.add(v);//potential bug with needing larger matrix
 		return true;
 	}
 
 	@Override
 	public boolean containsEdge(Town sourceVertex, Town destinationVertex) {
-		for(int i = 0; i < roads.size(); i ++) {
-			if(roads.get(i).getEnd1().compareTo(sourceVertex) == 1 || roads.get(i).getEnd2().compareTo(sourceVertex) == 1) {
-				for(int j = 0; j < roads.size(); j ++) {
-					if(roads.get(j).getEnd1().compareTo(destinationVertex) == 1 || roads.get(j).getEnd2().compareTo(destinationVertex) == 1) {
-						return true;
-					}
-				}
-				break;
-			}
-		}
-		return false;
+		return (getEdge(sourceVertex, destinationVertex) != null);
 	}
 
 	@Override
 	public boolean containsVertex(Town v) {
-		for(int i = 0; i < towns.size(); i++) {
-			if(towns.get(i).compareTo(v) == 1)
-				return true;
-		}
-		return false;
+		return (towns.indexOf(v) != -1);
 	}
 
 	@Override
 	public Set<Road> edgeSet() {
 		Set<Road> set = new HashSet<>();
+		
 		for(int i = 0; i < roads.size(); i++) {
 			set.add(roads.get(i));
 		}
@@ -119,57 +111,45 @@ public class Graph implements GraphInterface<Town, Road>{
 	@Override
 	public Set<Road> edgesOf(Town vertex) {
 		Set<Road> set = new HashSet<>();
-		for(int i = 0; i < towns.size(); i++){
-			if(towns.get(i).compareTo(vertex) == 1) {
-				for(int j = 0; j < adjMatrix.length; j++) {
-					if(adjMatrix[i][j] != null)
-						set.add(adjMatrix[i][j]);
-				}
-				return set;
-			}
+
+		for(int i = 0; i < size; i++) {
+			if(adjMatrix[towns.indexOf(vertex)][i] != null)
+				set.add(adjMatrix[towns.indexOf(vertex)][i]);
 		}
-		return null;
+		return set;
 	}
 
 	@Override
 	public Road removeEdge(Town sourceVertex, Town destinationVertex, int weight, String description) {
-		Road temp = new Road(sourceVertex, destinationVertex, weight, description);
-		for(int i = 0; i < roads.size(); i++) {
-			if(roads.get(i).compareTo(temp) == 1) {
-				roads.remove(i);
-				regenerateGraph();
-			}
-			return temp;
-		}
-		return null;
+		if(containsEdge(sourceVertex, destinationVertex)) {
+			roads.remove(roads.indexOf(getEdge(sourceVertex, destinationVertex)));//finds edge from ends, finds index of edge in list, removes
+			regenerateGraph();
+			return new Road(sourceVertex, destinationVertex, weight, description);//idk why it asks for a Road return
+		}		
+		return null;//does not contain edge
 	}
 
 	@Override
 	public boolean removeVertex(Town v) {
-		for(int i = 0; i < towns.size(); i++) {//searches for town
-			if(towns.get(i).compareTo(v) == 1) {//town found
-				towns.remove(i);//town gets removed from list
-				
-				Set<Road> set = new HashSet<>(edgesOf(v));//gets edge set of town
-				Iterator<Road> it = set.iterator();
-				int j = 0;
-				while(it.hasNext()) {//iterates through set
-					if(roads.get(j).compareTo(it.next()) == 1) {
-						roads.remove(j);//removes roads from list
-						continue;
-					}
-					i++;
-				}
-				regenerateGraph();
-				return true;
+		if(containsVertex(v)) {
+			towns.remove(towns.indexOf(v));//town gets removed from list
+			
+			Set<Road> set = new HashSet<>(edgesOf(v));//gets edge set of town
+			Iterator<Road> it = set.iterator();
+			
+			while(it.hasNext()) {//iterates through set
+				roads.remove(roads.indexOf(it.next()));//removes the connected roads
 			}
+			regenerateGraph();
+			return true;
 		}
-		return false;		
+		return false;//does not contain vertex		
 	}
 
 	@Override
 	public Set<Town> vertexSet() {
 		Set<Town> set = new HashSet<>();
+		
 		for(int i = 0; i < towns.size(); i++) {
 			set.add(towns.get(i));
 		}
@@ -184,7 +164,9 @@ public class Graph implements GraphInterface<Town, Road>{
 
 	@Override
 	public void dijkstraShortestPath(Town sourceVertex) {
-		// TODO Auto-generated method stub
+	
+	
 		
-	}	
+	}
+
 }

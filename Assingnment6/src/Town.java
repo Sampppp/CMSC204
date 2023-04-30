@@ -1,46 +1,34 @@
-import java.util.ArrayList;
 public class Town implements Comparable<Town>{
 
-	private ArrayList<Town> adj = new ArrayList<>();
 	private String name;
 	
-	Town(String a){
+	Town(String a){//constructor
 		name = a;
 	}
 	
-	Town(Town a){
+	Town(Town a){//copy constructor
 		name = a.getName();
-		for(int i = 0; i < a.getArrayList().size(); i++) {
-			adj.add(a.getArrayList().get(i));
-		}
 	}
 	
-	public void addAdj(Town b) {
-		adj.add(b);
-	}
-	
-	public void setAdj(ArrayList<Town> b) {
-		for(int i = 0; i < b.size(); i++) {
-			adj.add(b.get(i));
-		}
-	}
-	public ArrayList<Town> getArrayList(){
-		return adj;
-	}
-	
-	public void setName(String a) {
-		name = a;
-	}
 	public String getName() {
 		return name;
 	}
 	
 	@Override
-	public int compareTo(Town o) {
-		if(name == o.getName())
-			return 1;
-		else
-			return 0;
+	public int compareTo(Town o) {//if names are equal
+		return name.compareTo(o.getName());
 	}
-
+	@Override
+	public String toString() {
+		return name;
+	}
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+	@Override
+	public boolean equals(Object a) {//if all fields are equal
+		Town b = (Town)a;
+		return name.equals(b.getName()); 
+	}
 }
