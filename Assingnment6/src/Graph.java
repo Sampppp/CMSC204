@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,18 +23,17 @@ public class Graph implements GraphInterface<Town, Road>{
 	private final int DEFAULT_SIZE = 20;
 	private int size;
 	
-	private int maxWeight = 0;
+	private int[] distance;
+	private int[] prev;
+	private boolean[] visited;
+	
 	Graph(){
 		adjMatrix = new Road[DEFAULT_SIZE][DEFAULT_SIZE];
 		size = DEFAULT_SIZE;
 	}
 	
-	Graph(int a){
-		adjMatrix = new Road[a][a];
-		size = a;
-	}
-	
 	public void regenerateGraph() {
+		adjMatrix = new Road[DEFAULT_SIZE][DEFAULT_SIZE];
 		int x, y;
 		
 		for(int i = 0; i < roads.size(); i ++) {
@@ -42,6 +42,8 @@ public class Graph implements GraphInterface<Town, Road>{
 			adjMatrix[x][y] = roads.get(i);
 			adjMatrix[y][x] = roads.get(i);
 		}
+		size = adjMatrix.length;
+
 	}
 	
 	public Town getVertex(Town a) {
@@ -53,7 +55,7 @@ public class Graph implements GraphInterface<Town, Road>{
 	@Override
 	public Road getEdge(Town sourceVertex, Town destinationVertex) {
 		if(towns.indexOf(sourceVertex) == -1 || towns.indexOf(destinationVertex) == -1)//checks if inputed towns are in towns list
-			return null;
+			return null;		
 		return adjMatrix[towns.indexOf(sourceVertex)][towns.indexOf(destinationVertex)];
 	}
 
@@ -92,13 +94,17 @@ public class Graph implements GraphInterface<Town, Road>{
 
 	@Override
 	public Set<Road> edgesOf(Town vertex) {
-		Set<Road> set = new HashSet<>();
-
-		for(int i = 0; i < size; i++) {
-			if(adjMatrix[towns.indexOf(vertex)][i] != null)
-				set.add(adjMatrix[towns.indexOf(vertex)][i]);
+		if(containsVertex(vertex)) {
+			
+			Set<Road> set = new HashSet<>();
+			
+			for(int i = 0; i < size; i++) {
+				if(adjMatrix[towns.indexOf(vertex)][i] != null)
+					set.add(adjMatrix[towns.indexOf(vertex)][i]);
+			}
+			return set;
 		}
-		return set;
+		return null;
 	}
 
 	@Override
@@ -114,11 +120,10 @@ public class Graph implements GraphInterface<Town, Road>{
 	@Override
 	public boolean removeVertex(Town v) {
 		if(containsVertex(v)) {
-			towns.remove(towns.indexOf(v));//town gets removed from list
-			
+
 			Set<Road> set = new HashSet<>(edgesOf(v));//gets edge set of town
 			Iterator<Road> it = set.iterator();
-			
+			towns.remove(towns.indexOf(v));//town gets removed from list
 			while(it.hasNext()) {//iterates through set
 				roads.remove(roads.indexOf(it.next()));//removes the connected roads
 			}
@@ -140,52 +145,78 @@ public class Graph implements GraphInterface<Town, Road>{
 
 	@Override
 	public ArrayList<String> shortestPath(Town sourceVertex, Town destinationVertex) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override//fix me @ !!!!mjtyfghjuyyughjktyfcvgrtyfdgfrtydgrtydfgrtyudftyufrgtyufgh
-	public void dijkstraShortestPath(Town sourceVertex) {
-		int[] distance = new int[towns.size()];
-		boolean[] pathSet = new boolean[towns.size()];
+		dijkstraShortestPath(sourceVertex);
+		ArrayList<Integer> path = new ArrayList<>();
 		
-		for(int i = 0; i < roads.size(); i++) {//finds max weight
-			if(i == 0) {
-				maxWeight = roads.get(i).getDistance();
-				continue;
-			}
-			if(roads.get(i).getDistance() > maxWeight)
-				maxWeight = roads.get(i).getDistance();
+		int index = towns.indexOf(destinationVertex);
+		
+		while(index != towns.indexOf(sourceVertex)) {
+			path.add(index);
+			index = prev[index];
 		}
+		
+		path.add(towns.indexOf(sourceVertex));
+		Collections.reverse(path);
+		
+		ArrayList<String> realPath = new ArrayList<>();
+		
+		Town town1;
+		Road road;
+		Town town2;
+		
+		for(int i = 0; i < path.size() - 1; i++) {
+			
+			town1 = towns.get(path.get(i));
+			road = adjMatrix[path.get(i)][path.get(i + 1)];
+			town2 = towns.get(path.get(i + 1));
+
+			if(road == null)
+				return realPath;
+	
+			realPath.add(String.format("%s via %s to %s %d mi", town1.getName(), road.getName(), town2.getName(), road.getDistance()));
+		}
+		
+		return realPath;
+	}
+	
+	@Override
+	public void dijkstraShortestPath(Town sourceVertex) {
+		distance = new int[towns.size()];
+		visited = new boolean[towns.size()];
+		prev = new int[towns.size()];
+		
 		for(int i = 0; i < distance.length; i++) {
-			distance[i] = maxWeight;
+			distance[i] = Integer.MAX_VALUE;
+			visited[i] = false;
 		}
 		
 		distance[towns.indexOf(sourceVertex)] = 0;//where path starts
 		
+		
 		for(int i = 0; i < towns.size() - 1; i++) {
-			int u = minDistance(distance, pathSet);
-			pathSet[u] = true;
+			int u = minDistance(distance, visited);
+			visited[u] = true;
 			
 			for(int j = 0; j < towns.size(); j++) {
-				if(pathSet[j] && adjMatrix[u][j] != null && distance[u] != maxWeight && distance[u] + adjMatrix[u][j].getDistance() < distance[j])
+				if(!visited[j] && adjMatrix[u][j] != null && (distance[u] + adjMatrix[u][j].getDistance() < distance[j])) {
 					distance[j] = distance[u] + adjMatrix[u][j].getDistance();
+					prev[j] = u;
+				}
+					
 			}
 		}
 	}
 	
-	int minDistance(int[] distance, boolean[] pathSet) {
-		int min = maxWeight;
+	int minDistance(int[] distance, boolean[] visited) {
+		int min = Integer.MAX_VALUE;
 		int min_index = -1;
 		
 		for(int i = 0; i < towns.size(); i++) {
-			if(pathSet[i] == false && distance[i] <= min) {
+			if(!visited[i] && distance[i] < min) {
 				min = distance[i];
 				min_index = i;
 			}
 		}
 		return min_index;
 	}
-	
-	
 }

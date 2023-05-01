@@ -1,7 +1,21 @@
+/*
+ * Class: CMSC204 
+ * Instructor: David Kuijt
+ * Description: Graph of a town
+ * Due: 04/30/2023
+ * Platform/compiler:
+ * I pledge that I have completed the programming 
+ * assignment independently. I have not copied the code 
+ * from a student or any source. I have not given my code 
+ * to any student.
+   Print your Name here: Samson Pak
+*/
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class TownGraphManager implements TownGraphManagerInterface{
 
@@ -42,26 +56,26 @@ public class TownGraphManager implements TownGraphManagerInterface{
 	@Override
 	public boolean containsRoadConnection(String town1, String town2) {
 		if(containsTown(town1) && containsTown(town2))
-			return (graph.getEdge(new Town(town1), new Town(town2)) != null);
+			return (graph.containsEdge(new Town(town1), new Town(town2)));
 		return false;
 	}
 
 	@Override
 	public ArrayList<String> allRoads() {
 		ArrayList<String> a = new ArrayList<>();
-		Road[] roads = (Road[]) graph.edgeSet().toArray();
+		Road[] roads = (Road[]) graph.edgeSet().toArray(new Road[0]);
 		
 		for(int i = 0; i < roads.length; i++) {
 			a.add(roads[i].getName());
 		}
 		
-		//need to sort///////////////////////////////////////////////
+		Collections.sort(a);
 		return a;
 	}
 
 	@Override
 	public boolean deleteRoadConnection(String town1, String town2, String road) {
-		if(containsTown(town1) && containsTown(town2) && graph.containsEdge(new Town(town1), new Town(town2))) {
+		if(graph.containsEdge(new Town(town1), new Town(town2))) {
 			Road a = new Road(graph.getEdge(new Town(town1), new Town(town2)));
 			return (graph.removeEdge(a.getEnd1(), a.getEnd2(), a.getDistance(), a.getName()) != null);
 		}
@@ -78,25 +92,40 @@ public class TownGraphManager implements TownGraphManagerInterface{
 	@Override
 	public ArrayList<String> allTowns() {
 		ArrayList<String> a = new ArrayList<>();
-		Town[] towns = (Town[]) graph.vertexSet().toArray();
+		Town[] towns = (Town[]) graph.vertexSet().toArray(new Town[0]);
 		
 		for(int i = 0; i < towns.length; i++) {
 			a.add(towns[i].getName());
 		}
 		
-		//need to sort///////////////////////////////////////////////
+		Collections.sort(a);
 		return a;
 	}
 
 	@Override
 	public ArrayList<String> getPath(String town1, String town2) {
-		// TODO Auto-generated method stub
+		if(containsTown(town1) && containsTown(town2))
+			return graph.shortestPath(getTown(town1), getTown(town2));
 		return null;
 	}
 
 	public void populateTownGraph(File selectedFile) throws IOException, FileNotFoundException {
-		// TODO Auto-generated method stub
-		
+		Scanner a = new Scanner(selectedFile);
+		String temp;
+		String town1;
+		String town2;
+		int weight;
+		String roadName;
+		while(a.hasNextLine()) {
+			temp = a.nextLine();//I-94,282;Chicago;Detroit
+			roadName = temp.split(",")[0];//[I-94][282;Chicago;Detroit]
+			weight = Integer.parseInt(temp.split(",")[1].split(";")[0]);//[I-94][282][Chicago][Detroit]
+			town1 = temp.split(",")[1].split(";")[1];
+			town2 = temp.split(",")[1].split(";")[2];
+			
+			addRoad(town1, town2, weight, roadName);
+		}
+		a.close();
 	}
 
 }
